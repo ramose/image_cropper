@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:simple_permissions/simple_permissions.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 enum PhotoSource {
   camera,
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double _maxSize = 640;
   File _image;
+  File _croppedFile;
 
   requestPermission(Permission p) async {
     PermissionStatus res = await SimplePermissions.requestPermission(p);
@@ -58,6 +60,20 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<Null> _cropImage(File imageFile) async {
+    File croppedFile = await ImageCropper.cropImage(
+      sourcePath: imageFile.path,
+      ratioX: 1.0,
+      ratioY: 1.0,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
+
+    setState(() {
+      _croppedFile = croppedFile;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     void showPhotoOptions() {
@@ -98,20 +114,45 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: <Widget>[
-          _image == null
-              ? Center(
-                  child: Text('no image'),
-                )
-              : Image.file(
-                  File(_image.path),
-                  fit: BoxFit.cover,
-                ),
+          Expanded(
+            flex: 1,
+            child: _image == null
+                ? Center(
+                    child: Text('no image'),
+                  )
+                : Image.file(
+                    File(_image.path),
+                    fit: BoxFit.cover,
+                  ),
+          ),
+          Expanded(
+            flex: 1,
+            child: _croppedFile == null
+                ? Center(
+                    child: Text('no cropped image'),
+                  )
+                : Image.file(
+                    File(_croppedFile.path),
+                    fit: BoxFit.cover,
+                  ),
+          )
         ],
       ),
       bottomNavigationBar: BottomAppBar(
-        child: RaisedButton(
-          child: Text('Add Picture'),
-          onPressed: showPhotoOptions,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            RaisedButton(
+              child: Text('Add Picture'),
+              onPressed: showPhotoOptions,
+            ),
+            RaisedButton(
+              child: Text('Crop'),
+              onPressed: () {
+                _cropImage(_image);
+              },
+            ),
+          ],
         ),
       ),
     );
