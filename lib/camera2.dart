@@ -9,12 +9,12 @@ enum PhotoSource {
   gallery,
 }
 
-class HomePage extends StatefulWidget {
+class Camera2Page extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _Camera2PageState createState() => _Camera2PageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _Camera2PageState extends State<Camera2Page> {
   double _maxSize = 640;
   File _image;
   File _croppedFile;
