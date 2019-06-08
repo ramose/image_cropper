@@ -115,7 +115,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4"
+    version: "2.0.5"
   image_cropper:
     dependency: "direct main"
     description:
