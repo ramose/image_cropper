@@ -22,12 +22,18 @@ dependencies:
 
   simple_permissions:
   image_picker: ^0.4.12+1
+
+  # camera1
   image_cropper: ^1.0.2
 
   extended_image_library: ^0.1.2
   extended_image: ^0.4.1
 
+  # camera2
   image: ^2.1.4
+
+  # camera 3
+  tflite: ^1.0.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
