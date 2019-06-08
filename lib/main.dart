@@ -1,6 +1,5 @@
-import 'package:cropper/camera2.dart';
+import 'package:cropper/camera3.dart';
 import 'package:flutter/material.dart';
-import 'package:cropper/camera1.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Camera2Page(),
+      home: Camera3Page(),
     );
   }
 }

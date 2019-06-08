@@ -12,12 +12,12 @@ enum PhotoSource {
   gallery,
 }
 
-class Camera2Page extends StatefulWidget {
+class Camera3Page extends StatefulWidget {
   @override
-  _Camera2PageState createState() => _Camera2PageState();
+  _Camera3PageState createState() => _Camera3PageState();
 }
 
-class _Camera2PageState extends State<Camera2Page> {
+class _Camera3PageState extends State<Camera3Page> {
   double _maxSize = 640;
   io.File _image;
   io.File _croppedFile;
