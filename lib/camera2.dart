@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'dart:io' as io;
+// import 'dart:ui';
 import 'package:image_picker/image_picker.dart';
 import 'package:simple_permissions/simple_permissions.dart';
-import 'package:image_cropper/image_cropper.dart';
+// import 'package:image_cropper/image_cropper.dart';
+import 'package:image/image.dart' as Img;
+// import 'package:extended_image_library/extended_image_library.dart';
 
 enum PhotoSource {
   camera,
@@ -16,8 +19,10 @@ class Camera2Page extends StatefulWidget {
 
 class _Camera2PageState extends State<Camera2Page> {
   double _maxSize = 640;
-  File _image;
-  File _croppedFile;
+  io.File _image;
+  io.File _croppedFile;
+  double width = 300;
+  Widget wimage;
 
   requestPermission(Permission p) async {
     PermissionStatus res = await SimplePermissions.requestPermission(p);
@@ -43,7 +48,7 @@ class _Camera2PageState extends State<Camera2Page> {
   }
 
   Future getImage(PhotoSource _source) async {
-    File image;
+    io.File image;
 
     if (_source == PhotoSource.camera) {
       image = await ImagePicker.pickImage(
@@ -54,25 +59,28 @@ class _Camera2PageState extends State<Camera2Page> {
     }
 
     if (image != null) {
+      Img.Image img = Img.decodeImage(image.readAsBytesSync());
+      Img.Image crop = Img.copyCrop(img, 0, 0, 100, 100);
+      image.writeAsBytesSync(Img.encodePng(crop));
       setState(() {
         _image = image;
       });
     }
   }
 
-  Future<Null> _cropImage(File imageFile) async {
-    File croppedFile = await ImageCropper.cropImage(
-      sourcePath: imageFile.path,
-      ratioX: 1.0,
-      ratioY: 1.0,
-      maxWidth: 512,
-      maxHeight: 512,
-    );
+  // Future<Null> _cropImage(io.File imageFile) async {
+  //   io.File croppedFile = await ImageCropper.cropImage(
+  //     sourcePath: imageFile.path,
+  //     ratioX: 1.0,
+  //     ratioY: 1.0,
+  //     maxWidth: 512,
+  //     maxHeight: 512,
+  //   );
 
-    setState(() {
-      _croppedFile = croppedFile;
-    });
-  }
+  //   setState(() {
+  //     _croppedFile = croppedFile;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +94,9 @@ class _Camera2PageState extends State<Camera2Page> {
               FlatButton(
                 child: Text("Kamera"),
                 onPressed: () {
-                  if (Platform.isAndroid) {
+                  if (io.Platform.isAndroid) {
                     checkPermission(Permission.Camera);
-                  } else if (Platform.isIOS) {
+                  } else if (io.Platform.isIOS) {
                     getImage(PhotoSource.camera);
                   }
                   Navigator.of(context).pop();
@@ -112,31 +120,8 @@ class _Camera2PageState extends State<Camera2Page> {
       appBar: AppBar(
         title: Text('Image Cropper'),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: _image == null
-                ? Center(
-                    child: Text('no image'),
-                  )
-                : Image.file(
-                    File(_image.path),
-                    fit: BoxFit.cover,
-                  ),
-          ),
-          Expanded(
-            flex: 1,
-            child: _croppedFile == null
-                ? Center(
-                    child: Text('no cropped image'),
-                  )
-                : Image.file(
-                    File(_croppedFile.path),
-                    fit: BoxFit.cover,
-                  ),
-          )
-        ],
+      body: Center(
+        child: _image == null ? Text('no image') : Image.file(_image),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -146,12 +131,12 @@ class _Camera2PageState extends State<Camera2Page> {
               child: Text('Add Picture'),
               onPressed: showPhotoOptions,
             ),
-            RaisedButton(
-              child: Text('Crop'),
-              onPressed: () {
-                _cropImage(_image);
-              },
-            ),
+            // RaisedButton(
+            //   child: Text('Crop'),
+            //   onPressed: () {
+            //     _cropImage(_image);
+            //   },
+            // ),
           ],
         ),
       ),
