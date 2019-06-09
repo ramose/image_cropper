@@ -1,6 +1,6 @@
 # image_cropper
 
-A new Flutter project.
+An image experiment project with crop and tflite.
 
 ## Getting Started
 
